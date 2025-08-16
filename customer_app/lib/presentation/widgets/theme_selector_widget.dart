@@ -1,5 +1,4 @@
 // lib/presentation/widgets/theme_selector_widget.dart
-import 'package:customer_app/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
@@ -14,15 +13,14 @@ class ThemeSelectorWidget extends StatelessWidget {
     return Consumer<ThemeProvider>(
       builder: (context, themeProvider, child) {
         return Container(
-          color: context.backgroundColor,
+          color: Colors.white,
           margin: const EdgeInsets.only(top: 8.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Section Header
               Padding(
-                padding: const EdgeInsets.only(
-                    left: 16.0, top: 16.0, bottom: 8.0, right: 16.0),
+                padding: const EdgeInsets.only(left: 16.0, top: 16.0, bottom: 8.0, right: 16.0),
                 child: Text(
                   'Appearance',
                   style: TextStyle(
@@ -32,7 +30,7 @@ class ThemeSelectorWidget extends StatelessWidget {
                   ),
                 ),
               ),
-
+              
               // Theme Options
               _buildThemeOption(
                 context,
@@ -43,7 +41,7 @@ class ThemeSelectorWidget extends StatelessWidget {
                 ThemeMode.light,
               ),
               const Divider(height: 1, indent: 56, endIndent: 16),
-
+              
               _buildThemeOption(
                 context,
                 themeProvider,
@@ -53,7 +51,7 @@ class ThemeSelectorWidget extends StatelessWidget {
                 ThemeMode.dark,
               ),
               const Divider(height: 1, indent: 56, endIndent: 16),
-
+              
               _buildThemeOption(
                 context,
                 themeProvider,
@@ -78,13 +76,13 @@ class ThemeSelectorWidget extends StatelessWidget {
     ThemeMode mode,
   ) {
     final isSelected = themeProvider.themeMode == mode;
-
+    
     return Material(
-      color: context.backgroundColor,
+      color: Colors.white,
       child: InkWell(
         onTap: () async {
           await themeProvider.setThemeMode(mode);
-
+          
           // Show feedback with proper context check
           if (context.mounted) {
             try {
@@ -107,9 +105,7 @@ class ThemeSelectorWidget extends StatelessWidget {
             children: [
               Icon(
                 icon,
-                color: isSelected
-                    ? Theme.of(context).primaryColor
-                    : Colors.grey[700],
+                color: isSelected ? Theme.of(context).primaryColor : Colors.grey[700],
                 size: 24,
               ),
               const SizedBox(width: 16),
@@ -121,9 +117,8 @@ class ThemeSelectorWidget extends StatelessWidget {
                       title,
                       style: TextStyle(
                         fontSize: 16,
-                        color: context.onBackgroundColor,
-                        fontWeight:
-                            isSelected ? FontWeight.w600 : FontWeight.normal,
+                        color: Colors.black87,
+                        fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                       ),
                     ),
                     const SizedBox(height: 2),
@@ -172,14 +167,11 @@ class ThemeToggleWidget extends StatelessWidget {
               await themeProvider.toggleTheme();
             },
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
               child: Row(
                 children: [
                   Icon(
-                    themeProvider.isDarkMode
-                        ? Icons.dark_mode
-                        : Icons.light_mode,
+                    themeProvider.isDarkMode ? Icons.dark_mode : Icons.light_mode,
                     color: Colors.grey[700],
                     size: 24,
                   ),
@@ -261,7 +253,7 @@ class ThemeSelectionBottomSheet extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 16),
-
+              
               // Theme options
               _buildBottomSheetOption(
                 context,
@@ -287,7 +279,7 @@ class ThemeSelectionBottomSheet extends StatelessWidget {
                 Icons.settings_brightness,
                 ThemeMode.system,
               ),
-
+              
               const SizedBox(height: 16),
             ],
           ),
@@ -305,7 +297,7 @@ class ThemeSelectionBottomSheet extends StatelessWidget {
     ThemeMode mode,
   ) {
     final isSelected = themeProvider.themeMode == mode;
-
+    
     return InkWell(
       onTap: () async {
         await themeProvider.setThemeMode(mode);
@@ -320,21 +312,16 @@ class ThemeSelectionBottomSheet extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color:
-                isSelected ? Theme.of(context).primaryColor : Colors.grey[300]!,
+            color: isSelected ? Theme.of(context).primaryColor : Colors.grey[300]!,
             width: isSelected ? 2 : 1,
           ),
-          color: isSelected
-              ? Theme.of(context).primaryColor.withOpacity(0.05)
-              : null,
+          color: isSelected ? Theme.of(context).primaryColor.withOpacity(0.05) : null,
         ),
         child: Row(
           children: [
             Icon(
               icon,
-              color: isSelected
-                  ? Theme.of(context).primaryColor
-                  : Colors.grey[700],
+              color: isSelected ? Theme.of(context).primaryColor : Colors.grey[700],
               size: 24,
             ),
             const SizedBox(width: 16),
@@ -346,11 +333,8 @@ class ThemeSelectionBottomSheet extends StatelessWidget {
                     title,
                     style: TextStyle(
                       fontSize: 16,
-                      fontWeight:
-                          isSelected ? FontWeight.w600 : FontWeight.normal,
-                      color: isSelected
-                          ? Theme.of(context).primaryColor
-                          : Colors.black87,
+                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                      color: isSelected ? Theme.of(context).primaryColor : Colors.black87,
                     ),
                   ),
                   const SizedBox(height: 2),

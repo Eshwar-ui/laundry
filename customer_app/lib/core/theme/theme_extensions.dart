@@ -1,6 +1,7 @@
 // lib/core/theme/theme_extensions.dart
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
+import 'app_text_theme.dart';
 
 /// Theme Extensions for easy access to colors and text styles
 /// This provides a convenient way to access theme properties throughout the app
@@ -50,12 +51,12 @@ extension ThemeExtensions on BuildContext {
   /// Surface colors
   Color get surfaceColor => colorScheme.surface;
   Color get onSurfaceColor => colorScheme.onSurface;
-  Color get surfaceVariant => colorScheme.surfaceContainerHighest;
+  Color get surfaceVariant => colorScheme.surfaceVariant;
   Color get onSurfaceVariant => colorScheme.onSurfaceVariant;
   
   /// Background colors
-  Color get backgroundColor => colorScheme.surface;
-  Color get onBackgroundColor => colorScheme.onSurface;
+  Color get backgroundColor => colorScheme.background;
+  Color get onBackgroundColor => colorScheme.onBackground;
   
   /// Error colors
   Color get errorColor => colorScheme.error;
@@ -327,4 +328,3 @@ class ThemeAwareWidgets {
     );
   }
 }
-

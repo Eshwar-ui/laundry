@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:customer_app/core/theme/theme_extensions.dart';
 import 'dart:async';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -25,11 +24,11 @@ class _SplashScreenState extends State<SplashScreen> {
             Container(
               width: 120,
               height: 120,
-              decoration: BoxDecoration(
-                shape: BoxShape.rectangle,
-                // border: Border.all(color: Colors.grey[300]!),
-              ),
-              child: _buildThemeLogo(),
+              // decoration: BoxDecoration(
+              //   color: Colors.grey[100],
+              //   borderRadius: BorderRadius.circular(20),
+              // ),
+              child: Image.asset("assets/icons/icon.png", fit: BoxFit.cover),
             ),
             const SizedBox(height: 30),
             // App title
@@ -37,7 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
               'CLOUD IRONING FACTORY',
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                 letterSpacing: 1.5,
-                color: Theme.of(context).colorScheme.onSurface,
+                color: Theme.of(context).colorScheme.onBackground,
               ),
             ),
             Text(
@@ -45,28 +44,19 @@ class _SplashScreenState extends State<SplashScreen> {
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 letterSpacing: 1.0,
                 fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.onSurface,
+                color: Theme.of(context).colorScheme.onBackground,
               ),
             ),
             const SizedBox(height: 8),
             Text(
               'Ironing Service',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface,
+                color: Theme.of(context).colorScheme.onBackground,
               ),
             ),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildThemeLogo() {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final asset = isDark ? 'assets/icons/logo_dark.svg' : 'assets/icons/logo_light.svg';
-    return SvgPicture.asset(
-      asset,
-      fit: BoxFit.contain,
     );
   }
 

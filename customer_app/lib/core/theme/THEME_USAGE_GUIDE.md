@@ -356,4 +356,3 @@ See the updated components in:
 - `lib/presentation/screens/main/bottom_navigation.dart`
 
 These files demonstrate proper theme usage patterns.
-

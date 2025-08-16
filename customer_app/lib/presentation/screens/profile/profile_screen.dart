@@ -25,7 +25,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final firebase_auth.FirebaseAuth _auth = firebase_auth.FirebaseAuth.instance;
   int _orderCount = 0;
   bool _isLoadingOrders = true;
-
+  
   // QR Code state variables
   String? _qrCodeUrl;
   bool _isLoadingQRCode = false;
@@ -48,7 +48,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _checkAndLoadQRCode(UserModel user) async {
     if (_hasCheckedQRCode) return;
-
+    
     setState(() {
       _hasCheckedQRCode = true;
       _isLoadingQRCode = true;
@@ -61,7 +61,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         user.name.isNotEmpty ? user.name : user.displayName,
         user.phoneNumber,
       );
-
+      
       setState(() {
         _qrCodeUrl = qrUrl;
         _isLoadingQRCode = false;
@@ -155,7 +155,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           .collection('addresses')
           .doc(address.id)
           .get();
-
+      
       if (doc.exists) {
         Map<String, dynamic> addressData = doc.data() as Map<String, dynamic>;
         return AddressFormatter.formatAddressLayout(addressData);
@@ -179,11 +179,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       print('🏠 Profile Screen - User addresses: ${user.addresses.length}');
       for (int i = 0; i < user.addresses.length; i++) {
         final addr = user.addresses[i];
-        print(
-            '🏠 Address $i: ${addr.type} (Primary: ${addr.isPrimary}) - ${addr.addressLine1}, ${addr.city}');
+        print('🏠 Address $i: ${addr.type} (Primary: ${addr.isPrimary}) - ${addr.addressLine1}, ${addr.city}');
       }
-      print(
-          '🏠 Primary address: ${user.primaryAddress?.addressLine1 ?? 'None'}');
+      print('🏠 Primary address: ${user.primaryAddress?.addressLine1 ?? 'None'}');
     }
 
     // The AppBar title ('My Profile') is typically handled by MainWrapper.
@@ -193,7 +191,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     if (user == null) {
       // If user is null and we're not authenticated, navigate to login
-      if (authProvider.authStatus == AuthStatus.unauthenticated ||
+      if (authProvider.authStatus == AuthStatus.unauthenticated || 
           authProvider.authStatus == AuthStatus.failed) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (mounted) {
@@ -204,7 +202,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           }
         });
       }
-
+      
       // Show loading only if we're still authenticating
       return const Scaffold(
         body: Center(
@@ -221,8 +219,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
 
     return Scaffold(
-      backgroundColor: context.backgroundColor,
-      // Theme-aware background
+      backgroundColor: context.backgroundColor, // Theme-aware background
       // AppBar is handled by MainWrapper, but we might want to add an edit action.
       // For demonstration, let's imagine adding it here if it were a standalone screen.
       // In MainWrapper, the AppBar actions are global. If a specific edit icon is needed
@@ -236,7 +233,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             _buildUserInfoHeader(context, user),
             SizedBox(height: 10),
             _buildStatsBar(context, user),
-            // _buildQRCodeSection(context, user),
+            _buildQRCodeSection(context, user),
             // Theme Selector Section
             const ThemeSelectorWidget(),
             // _buildDefaultAddressSection(context, user.primaryAddress),
@@ -249,12 +246,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Icons.home_outlined,
                   'Saved Addresses',
                   () async {
-                    await Navigator.pushNamed(
-                        context, AppRoutes.manageAddresses);
+                    await Navigator.pushNamed(context, AppRoutes.manageAddresses);
                     // Refresh user data when returning from address management
                     if (mounted) {
-                      Provider.of<AuthProvider>(context, listen: false)
-                          .refreshUserData();
+                      Provider.of<AuthProvider>(context, listen: false).refreshUserData();
                     }
                   },
                 ),
@@ -291,10 +286,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   context,
                   Icons.card_giftcard_outlined, // Or Icons.share_outlined
                   'Refer & Earn',
-                  () {
-                    /* TODO: Navigate to Refer & Earn Screen */
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Refer & Earn: TBD')));
+                  () { /* TODO: Navigate to Refer & Earn Screen */ 
+                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Refer & Earn: TBD')));
                   },
                 ),
               ],
@@ -313,10 +306,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   context,
                   Icons.shield_outlined, // Or Icons.privacy_tip_outlined
                   'Privacy & Terms',
-                  () {
-                    /* TODO: Navigate to Privacy & Terms Screen */
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Privacy & Terms: TBD')));
+                  () { /* TODO: Navigate to Privacy & Terms Screen */ 
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Privacy & Terms: TBD')));
                   },
                 ),
                 // _buildMenuItem(
@@ -344,23 +335,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
           radius: 40,
           backgroundImage: imageProvider,
         ),
-        placeholder: (context, url) =>
-            const CircleAvatar(radius: 40, child: CircularProgressIndicator()),
+        placeholder: (context, url) => const CircleAvatar(radius: 40, child: CircularProgressIndicator()),
         errorWidget: (context, url, error) => CircleAvatar(
-            radius: 40,
-            backgroundColor: context.backgroundColor,
-            child: Icon(Icons.person, size: 40, color: Colors.grey[800])),
+            radius: 40, 
+            backgroundColor: Colors.grey[200], 
+            child: Icon(Icons.person, size: 40, color: Colors.grey[800])
+        ),
       );
     } else {
       profileImageWidget = CircleAvatar(
-          radius: 40,
-          backgroundColor: Colors.grey[200],
-          child: Icon(Icons.person, size: 40, color: Colors.grey[800]));
+        radius: 40, 
+        backgroundColor: Colors.grey[200], 
+        child: Icon(Icons.person, size: 40, color: Colors.grey[800])
+      );
     }
-
+    
     return Container(
-      color: context.backgroundColor,
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      color: Colors.white,
+      padding: const EdgeInsets.all(20.0),
       child: Column(
         children: [
           // Edit button at the top
@@ -372,21 +364,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  color: context.onBackgroundColor,
+                  color: Colors.grey[800],
                 ),
               ),
-              Spacer(),
               IconButton(
                 onPressed: () {
                   Navigator.pushNamed(context, AppRoutes.editProfile);
                 },
                 icon: Icon(Icons.edit, color: Colors.blue[600]),
                 tooltip: 'Edit Profile',
-              ),
-              IconButton(
-                onPressed: () => _showQRCodeDialog(context),
-                icon: Icon(Icons.qr_code, color: Colors.blue[600]),
-                tooltip: 'Open Qr',
               ),
             ],
           ),
@@ -401,45 +387,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     Text(
                       user.name.isNotEmpty ? user.name : user.displayName,
-                      style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 8),
                     if (user.phoneNumber.isNotEmpty)
                       Row(
                         children: [
-                          Icon(Icons.phone_outlined,
-                              size: 16, color: Colors.grey[700]),
+                          Icon(Icons.phone_outlined, size: 16, color: Colors.grey[700]),
                           const SizedBox(width: 6),
-                          Text(user.formattedPhoneNumber,
-                              style: TextStyle(
-                                  fontSize: 15, color: Colors.grey[700])),
+                          Text(user.formattedPhoneNumber, style: TextStyle(fontSize: 15, color: Colors.grey[700])),
                         ],
                       ),
                     const SizedBox(height: 4),
                     if (user.email.isNotEmpty)
                       Row(
                         children: [
-                          Icon(Icons.email_outlined,
-                              size: 16, color: Colors.grey[700]),
+                          Icon(Icons.email_outlined, size: 16, color: Colors.grey[700]),
                           const SizedBox(width: 6),
                           Expanded(
-                            child: Text(user.email,
-                                style: TextStyle(
-                                    fontSize: 15, color: Colors.grey[700])),
+                            child: Text(user.email, style: TextStyle(fontSize: 15, color: Colors.grey[700])),
                           ),
                         ],
                       ),
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        Icon(Icons.calendar_today,
-                            size: 14, color: Colors.grey[600]),
+                        Icon(Icons.calendar_today, size: 14, color: Colors.grey[600]),
                         const SizedBox(width: 4),
                         Text(
                           'Member since ${_formatDate(user.createdAt)}',
-                          style:
-                              TextStyle(fontSize: 12, color: Colors.grey[600]),
+                          style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                         ),
                       ],
                     ),
@@ -453,20 +430,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: context.infoColor.withOpacity(0.1),
+                color: const Color(0xFF0F3057).withOpacity(0.1),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.qr_code, size: 16, color: context.infoColor),
+                  Icon(Icons.qr_code, size: 16, color: const Color(0xFF0F3057)),
                   const SizedBox(width: 6),
                   Text(
                     'Client ID: ${user.phoneNumber.replaceAll('+91', '')}',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: context.infoColor,
+                      color: Color(0xFF0F3057),
                     ),
                   ),
                 ],
@@ -512,12 +489,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   TextButton(
                     onPressed: () async {
-                      await Navigator.pushNamed(
-                          context, AppRoutes.manageAddresses);
+                      await Navigator.pushNamed(context, AppRoutes.manageAddresses);
                       // Refresh user data when returning from address management
                       if (mounted) {
-                        Provider.of<AuthProvider>(context, listen: false)
-                            .refreshUserData();
+                        Provider.of<AuthProvider>(context, listen: false).refreshUserData();
                       }
                     },
                     child: const Text('Add Address'),
@@ -536,12 +511,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
-                    color: Colors.grey[600],
+                    color: Colors.grey[700],
                   ),
                 ),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                   decoration: BoxDecoration(
                     color: Colors.green.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(10),
@@ -566,107 +540,101 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ],
             ),
             const SizedBox(height: 8),
-
+            
             // Structured address display
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: context.surfaceColor,
+                color: Colors.grey[50],
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: Colors.grey[200]!),
               ),
-              child: Column(
+                              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Address name/identifier
                   if (user.primaryAddress!.doorNumber.isNotEmpty) ...[
                     Row(
                       children: [
-                        Icon(Icons.location_city_outlined,
-                            size: 14, color: Colors.grey[600]),
+                        Icon(Icons.location_city_outlined, size: 14, color: Colors.grey[600]),
                         const SizedBox(width: 6),
                         Text(
                           '${user.primaryAddress!.addressLine1.length > 50 ? user.primaryAddress!.addressLine1.substring(0, 50) + '...' : user.primaryAddress!.addressLine1}',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w500,
-                            color: context.onSurfaceColor,
+                            color: Colors.black87,
                           ),
                         ),
                       ],
                     ),
                   ],
-
+                  
                   // Floor number
                   if (user.primaryAddress!.addressLine2.isNotEmpty) ...[
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        Icon(Icons.layers_outlined,
-                            size: 14, color: Colors.grey[600]),
+                        Icon(Icons.layers_outlined, size: 14, color: Colors.grey[600]),
                         const SizedBox(width: 6),
                         Text(
                           '${user.primaryAddress!.addressLine2}',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w500,
-                            color: context.onSurfaceColor,
+                            color: Colors.black87,
                           ),
                         ),
                       ],
                     ),
                   ],
-
+                  
                   // Landmark
                   if (user.primaryAddress!.landmark.isNotEmpty) ...[
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        Icon(Icons.place_outlined,
-                            size: 14, color: Colors.grey[600]),
+                        Icon(Icons.place_outlined, size: 14, color: Colors.grey[600]),
                         const SizedBox(width: 6),
                         Text(
                           '${user.primaryAddress!.landmark}',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w500,
-                            color: context.onSurfaceColor,
+                            color: Colors.black87,
                           ),
                         ),
                       ],
                     ),
                   ],
-
+                  
                   // City, State, Pincode
-                  if (user.primaryAddress!.city.isNotEmpty ||
-                      user.primaryAddress!.state.isNotEmpty ||
-                      user.primaryAddress!.pincode.isNotEmpty) ...[
+                  if (user.primaryAddress!.city.isNotEmpty || user.primaryAddress!.state.isNotEmpty || user.primaryAddress!.pincode.isNotEmpty) ...[
                     const SizedBox(height: 8),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(Icons.home_outlined,
-                            size: 14, color: Colors.grey[600]),
+                        Icon(Icons.home_outlined, size: 14, color: Colors.grey[600]),
                         const SizedBox(width: 6),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
+                              const Text(
                                 'Full Address:',
                                 style: TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w500,
-                                  color: context.onSurfaceColor,
+                                  color: Colors.black87,
                                 ),
                               ),
                               const SizedBox(height: 2),
                               Text(
                                 user.primaryAddress!.fullAddress,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 12,
                                   height: 1.4,
-                                  color: context.onSurfaceColor,
+                                  color: Colors.black87,
                                 ),
                               ),
                             ],
@@ -675,15 +643,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ],
                     ),
                   ],
-
+                  
                   // GPS coordinates if available
-                  if (user.primaryAddress!.latitude != null &&
-                      user.primaryAddress!.longitude != null) ...[
+                  if (user.primaryAddress!.latitude != null && user.primaryAddress!.longitude != null) ...[
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        Icon(Icons.gps_fixed,
-                            size: 14, color: Colors.green[600]),
+                        Icon(Icons.gps_fixed, size: 14, color: Colors.green[600]),
                         const SizedBox(width: 6),
                         Text(
                           'GPS Location Available',
@@ -704,7 +670,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
-
+ 
   String _formatDate(dynamic timestamp) {
     if (timestamp == null) return 'Recently';
     try {
@@ -716,10 +682,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       } else {
         return 'Recently';
       }
-
+      
       final now = DateTime.now();
       final difference = now.difference(date);
-
+      
       if (difference.inDays < 30) {
         return '${difference.inDays} days ago';
       } else if (difference.inDays < 365) {
@@ -736,9 +702,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget _buildStatsBar(BuildContext context, UserModel user) {
     return Container(
-      color: context.backgroundColor,
-      padding:
-          const EdgeInsets.only(top: 10, bottom: 16.0, left: 16.0, right: 16.0),
+      color: Colors.white,
+      padding: const EdgeInsets.only(top: 10, bottom: 16.0, left: 16.0, right: 16.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
@@ -746,8 +711,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             _isLoadingOrders ? '...' : _orderCount.toString(),
             'Orders',
             Icons.shopping_bag_outlined,
-            () => Provider.of<BottomNavigationProvider>(context, listen: false)
-                .selectedIndex = 1,
+            () => Provider.of<BottomNavigationProvider>(context, listen: false).selectedIndex = 1,
           ),
           const SizedBox(width: 10),
           _buildStatItem(
@@ -758,8 +722,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               await Navigator.pushNamed(context, AppRoutes.manageAddresses);
               // Refresh user data when returning from address management
               if (mounted) {
-                Provider.of<AuthProvider>(context, listen: false)
-                    .refreshUserData();
+                Provider.of<AuthProvider>(context, listen: false).refreshUserData();
               }
             },
           ),
@@ -777,8 +740,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildStatItem(
-      String value, String label, IconData icon, VoidCallback onTap) {
+  Widget _buildStatItem(String value, String label, IconData icon, VoidCallback onTap) {
     return Expanded(
       child: Material(
         color: Colors.transparent,
@@ -788,26 +750,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
             decoration: BoxDecoration(
-              color: context.backgroundColor,
+              color: Colors.grey[100],
               borderRadius: BorderRadius.circular(10),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(icon,
-                    size: 20,
-                    color: Theme.of(context).brightness == Brightness.light
-                        ? context.primaryColor
-                        : context.onSurfaceColor),
+                Icon(icon, size: 20, color: const Color(0xFF0F3057)),
                 const SizedBox(height: 4),
                 Text(
                   value,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Theme.of(context).brightness == Brightness.light
-                        ? context.primaryColor
-                        : context.onSurfaceColor,
+                    color: Color(0xFF0F3057),
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -827,8 +783,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildDefaultAddressSection(
-      BuildContext context, Address? primaryAddress) {
+  Widget _buildDefaultAddressSection(BuildContext context, Address? primaryAddress) {
     return Container(
       color: Colors.white,
       margin: const EdgeInsets.only(top: 8.0),
@@ -844,8 +799,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   color: Colors.teal[50],
                   shape: BoxShape.circle,
                 ),
-                child:
-                    Icon(Icons.location_on, color: Colors.teal[600], size: 20),
+                child: Icon(Icons.location_on, color: Colors.teal[600], size: 20),
               ),
               const SizedBox(width: 12),
               const Text(
@@ -858,17 +812,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   await Navigator.pushNamed(context, AppRoutes.manageAddresses);
                   // Refresh user data when returning from address management
                   if (mounted) {
-                    Provider.of<AuthProvider>(context, listen: false)
-                        .refreshUserData();
+                    Provider.of<AuthProvider>(context, listen: false).refreshUserData();
                   }
                 },
-                child:
-                    const Text('Manage', style: TextStyle(color: Colors.blue)),
+                child: const Text('Manage', style: TextStyle(color: Colors.blue)),
               ),
             ],
           ),
           const SizedBox(height: 12),
-
+          
           if (primaryAddress != null) ...[
             // Address type badge
             Container(
@@ -887,7 +839,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             const SizedBox(height: 8),
-
+            
             // Address display with door number, floor number, and full address
             FutureBuilder<String>(
               future: _getFormattedAddress(primaryAddress),
@@ -913,10 +865,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 }
               },
             ),
-
+            
             // GPS coordinates if available
-            if (primaryAddress.latitude != null &&
-                primaryAddress.longitude != null) ...[
+            if (primaryAddress.latitude != null && primaryAddress.longitude != null) ...[
               const SizedBox(height: 8),
               Row(
                 children: [
@@ -966,9 +917,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
           ],
-
+          
           const SizedBox(height: 12),
-
+          
           // Action button
           SizedBox(
             width: double.infinity,
@@ -977,18 +928,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 await Navigator.pushNamed(context, AppRoutes.manageAddresses);
                 // Refresh user data when returning from address management
                 if (mounted) {
-                  Provider.of<AuthProvider>(context, listen: false)
-                      .refreshUserData();
+                  Provider.of<AuthProvider>(context, listen: false).refreshUserData();
                 }
               },
               icon: Icon(
-                primaryAddress != null
-                    ? Icons.edit_location
-                    : Icons.add_location,
+                primaryAddress != null ? Icons.edit_location : Icons.add_location,
                 size: 18,
               ),
-              label: Text(
-                  primaryAddress != null ? 'Manage Addresses' : 'Add Address'),
+              label: Text(primaryAddress != null ? 'Manage Addresses' : 'Add Address'),
               style: OutlinedButton.styleFrom(
                 foregroundColor: Colors.teal[600],
                 side: BorderSide(color: Colors.teal[300]!),
@@ -1001,23 +948,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildMenuSection(
-      BuildContext context, String title, List<Widget> items) {
+  Widget _buildMenuSection(BuildContext context, String title, List<Widget> items) {
     return Container(
       margin: const EdgeInsets.only(top: 8.0),
-      color: context.backgroundColor,
+      color: Colors.white,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.only(
-                left: 16.0, top: 16.0, bottom: 8.0, right: 16.0),
+            padding: const EdgeInsets.only(left: 16.0, top: 16.0, bottom: 8.0, right: 16.0),
             child: Text(
               title,
-              style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey[600]),
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.grey[600]),
             ),
           ),
           ListView.separated(
@@ -1025,20 +967,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
             physics: const NeverScrollableScrollPhysics(),
             itemCount: items.length,
             itemBuilder: (context, index) => items[index],
-            separatorBuilder: (context, index) => const Divider(
-                height: 1,
-                indent: 56,
-                endIndent: 16), // Indent matches icon + padding
+            separatorBuilder: (context, index) => const Divider(height: 1, indent: 56, endIndent: 16), // Indent matches icon + padding
           ),
         ],
       ),
     );
   }
 
-  Widget _buildMenuItem(
-      BuildContext context, IconData icon, String title, VoidCallback onTap) {
+  Widget _buildMenuItem(BuildContext context, IconData icon, String title, VoidCallback onTap) {
     return Material(
-      color: context.backgroundColor,
+      color: Colors.white,
       child: InkWell(
         onTap: onTap,
         child: Padding(
@@ -1047,10 +985,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               Icon(icon, color: Colors.grey[700], size: 24),
               const SizedBox(width: 16),
-              Expanded(
-                  child: Text(title,
-                      style: TextStyle(
-                          fontSize: 16, color: context.onBackgroundColor))),
+              Expanded(child: Text(title, style: const TextStyle(fontSize: 16, color: Colors.black87))),
               const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
             ],
           ),
@@ -1064,11 +999,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       padding: const EdgeInsets.all(16.0),
       child: TextButton.icon(
         icon: const Icon(Icons.logout, color: Colors.redAccent),
-        label: Text('Sign Out',
-            style: TextStyle(
-                color: context.errorColor,
-                fontSize: 16,
-                fontWeight: FontWeight.w600)),
+        label: const Text('Sign Out', style: TextStyle(color: Colors.redAccent, fontSize: 16, fontWeight: FontWeight.w600)),
         style: TextButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 12),
           minimumSize: const Size(double.infinity, 40), // Full width
@@ -1092,8 +1023,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     onPressed: () => Navigator.of(context).pop(false),
                   ),
                   TextButton(
-                    child: const Text('Sign Out',
-                        style: TextStyle(color: Colors.red)),
+                    child: const Text('Sign Out', style: TextStyle(color: Colors.red)),
                     onPressed: () => Navigator.of(context).pop(true),
                   ),
                 ],
@@ -1143,12 +1073,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
               if (_qrCodeUrl != null)
                 TextButton(
                   onPressed: () => _showQRCodeDialog(context),
-                  child: const Text('View Full',
-                      style: TextStyle(color: Colors.blue)),
+                  child: const Text('View Full', style: TextStyle(color: Colors.blue)),
                 ),
             ],
           ),
           const SizedBox(height: 12),
+          
           if (_isLoadingQRCode)
             Container(
               height: 120,
@@ -1244,8 +1174,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context: context,
       builder: (BuildContext context) {
         return Dialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
@@ -1255,8 +1184,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     const Text(
                       'My QR Code',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     const Spacer(),
                     IconButton(
@@ -1288,8 +1216,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       width: 250,
                       height: 250,
                       color: Colors.grey[100],
-                      child:
-                          const Icon(Icons.error, size: 48, color: Colors.grey),
+                      child: const Icon(Icons.error, size: 48, color: Colors.grey),
                     ),
                   ),
                 ),
