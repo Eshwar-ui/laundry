@@ -24,7 +24,7 @@ enum PaymentMethod { cod, upi }
 
 // Updated TimeSlot enum with new timings
 enum TimeSlot {
-  morning, // 7 AM - 11 AM
+  morning, // 8 AM - 11 AM
   noon, // 11 AM - 4 PM
   evening; // 4 PM - 8 PM
 
@@ -42,7 +42,7 @@ enum TimeSlot {
   String get timeRange {
     switch (this) {
       case TimeSlot.morning:
-        return '7 to 11 AM';
+        return '8 to 11 AM';
       case TimeSlot.noon:
         return '11 AM to 4 PM';
       case TimeSlot.evening:
@@ -53,7 +53,7 @@ enum TimeSlot {
   int get startHour {
     switch (this) {
       case TimeSlot.morning:
-        return 7;
+        return 8;
       case TimeSlot.noon:
         return 11;
       case TimeSlot.evening:
@@ -169,13 +169,7 @@ class _SchedulePickupDeliveryScreenState
     selectedDeliveryDate =
         _getMinimumDeliveryDate().add(const Duration(days: 1));
 
-    // Skip Sunday for both dates
-    while (selectedPickupDate!.weekday == DateTime.sunday) {
-      selectedPickupDate = selectedPickupDate!.add(const Duration(days: 1));
-    }
-    while (selectedDeliveryDate!.weekday == DateTime.sunday) {
-      selectedDeliveryDate = selectedDeliveryDate!.add(const Duration(days: 1));
-    }
+    // Sunday orders are now allowed - no need to skip Sunday
 
     _updateAvailablePickupSlots();
     _updateAvailableDeliverySlots();
@@ -204,10 +198,7 @@ class _SchedulePickupDeliveryScreenState
         return DateTime(now.year, now.month, now.day);
     }
 
-    // Skip Sunday (weekday 7) for pickup and delivery
-    while (date.weekday == DateTime.sunday) {
-      date = date.add(const Duration(days: 1));
-    }
+    // Sunday orders are now allowed - no need to skip Sunday
 
     return date;
   }
@@ -235,10 +226,7 @@ class _SchedulePickupDeliveryScreenState
       date = minDate;
     }
 
-    // Skip Sunday (weekday 7) for delivery
-    while (date.weekday == DateTime.sunday) {
-      date = date.add(const Duration(days: 1));
-    }
+    // Sunday orders are now allowed - no need to skip Sunday
 
     return date;
   }
@@ -1725,8 +1713,7 @@ class _SchedulePickupDeliveryScreenState
               helpText: 'Select Delivery Date',
               fieldLabelText: 'Must be at least 20 hours after pickup',
               selectableDayPredicate: (DateTime date) {
-                // Disable Sundays
-                if (date.weekday == DateTime.sunday) return false;
+                // Sunday orders are now allowed - removed Sunday restriction
                 // Ensure it meets minimum requirement
                 return !date.isBefore(_getMinimumDeliveryDate());
               },
@@ -1786,7 +1773,7 @@ class _SchedulePickupDeliveryScreenState
         selectedPickupDate!.year,
         selectedPickupDate!.month,
         selectedPickupDate!.day,
-        7, // 7 AM - earliest pickup time
+        8, // 8 AM - earliest pickup time
       );
       minDateTime = pickupDateTime.add(const Duration(hours: 20));
     } else {
@@ -1798,10 +1785,7 @@ class _SchedulePickupDeliveryScreenState
     DateTime minDate =
         DateTime(minDateTime.year, minDateTime.month, minDateTime.day);
 
-    // Skip Sunday for minimum delivery date
-    while (minDate.weekday == DateTime.sunday) {
-      minDate = minDate.add(const Duration(days: 1));
-    }
+    // Sunday orders are now allowed - no need to skip Sunday
 
     return minDate;
   }
@@ -1853,17 +1837,16 @@ class _SchedulePickupDeliveryScreenState
                   fieldLabelText: isDelivery
                       ? 'Must be at least 20 hours after pickup'
                       : 'Select date',
-                  selectableDayPredicate: (DateTime date) {
-                    // Disable Sundays
-                    if (date.weekday == DateTime.sunday) return false;
+                                selectableDayPredicate: (DateTime date) {
+                // Sunday orders are now allowed - removed Sunday restriction
 
-                    // For delivery, ensure it meets minimum requirement
-                    if (isDelivery) {
-                      return !date.isBefore(_getMinimumDeliveryDate());
-                    }
+                // For delivery, ensure it meets minimum requirement
+                if (isDelivery) {
+                  return !date.isBefore(_getMinimumDeliveryDate());
+                }
 
-                    return true;
-                  },
+                return true;
+              },
                 );
                 if (picked != null) {
                   onCustomDateSelected(picked);
